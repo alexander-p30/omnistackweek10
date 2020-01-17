@@ -1,3 +1,17 @@
+li.dev-item {
+    background: #FFF;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.02);
+    border-radius: 2px;
+    padding: 20px;
+}
+
+li.dev-item header{
+    display: flex;
+    flex: row;
+    align-items: center;
+
+}
+
 li.dev-item header img{
     width: 54px;
     height: 54px;
