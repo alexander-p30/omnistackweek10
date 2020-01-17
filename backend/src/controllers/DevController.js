@@ -54,13 +54,20 @@ module.exports = {
         let dev = await Dev.findOne( { github_username } );
         console.log(dev);
 
-        dev = await dev.update({
+        let devUpdate = await dev.update({
             name: request.body.name,
             bio: request.body.bio,
             techs: parseStringAsArray(request.body.techs)
         });
 
-        dev = await Dev.findOne( { github_username } );
+        if (!request.body.name)
+        {
+            devUpdate = await dev.update({
+                name: github_username
+            });
+        }
+
+        //dev = await Dev.findOne( { github_username } );
 
         return response.json(dev);
     }
