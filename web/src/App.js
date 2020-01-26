@@ -6,12 +6,8 @@ import './App.css';
 import './Sidebar.css';
 import './Main.css';
 
-import DevForm from './components/DevForm/index';
 import DevItem from './components/DevItem/index';
-
-// Compontente: bloco isolado (função) que retorna algum conteúdo (html, js, css)
-// Propriedade: informações que um componente PAI passa para um componente FILHO (parâmetro)
-// Estado: informações mantidas pelo componente (imutabilidade)
+import DevForm from './components/DevForm/index';
 
 
 function App() {
@@ -28,24 +24,25 @@ function App() {
   }, []);
 
   async function handleAddDev(data) {
-    const response = await api.post('/devs', data)
+
+    const response = await api.post('/devs', data);
 
     setDevs([...devs, response.data]);
-  };
+  }
+
 
   return (
     <div id="app">
       <aside>
         <strong>Cadastrar</strong>
-        <DevForm onSubmit={handleAddDev} />
+        <DevForm onSubmit={handleAddDev}/>
       </aside>
-      
+
       <main>
         <ul>
           {devs.map(dev => (
-            <DevItem key={dev._id} dev={dev} />
+            <DevItem key= {dev.id} dev={dev}/>
           ))}
-          
         </ul>
       </main>
     </div>

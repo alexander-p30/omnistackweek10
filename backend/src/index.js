@@ -1,9 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
 const routes = require('./routes');
+const { setupWebSocket } = require('./websocket');
 
 const app = express();
+const server = http.Server(app);
+
+setupWebSocket(server);
 
 mongoose.connect('mongodb+srv://estevan:dbpassword@cluster0-cvcev.mongodb.net/week10?retryWrites=true&w=majority', {
     useNewUrlParser: true,
@@ -11,17 +16,7 @@ mongoose.connect('mongodb+srv://estevan:dbpassword@cluster0-cvcev.mongodb.net/we
 });
 
 app.use(cors({ origin: 'http://localhost:3000' }));
-app.use(express.json());
+app.use(express.json()); // .use siginifica que é válido para todas as rotas
 app.use(routes);
 
-// get, post, put, delete
-
-//Tipos de parâmetros
-// Query Params: request.query (req.query) (Filtros, ordenação, paginação, etc...)
-// Route Params: request.params (req.params) (Identificar um recurso para alteração ou remoção.)
-// Body: request.body (req.body) (Dados para criação ou alteração de registro)
-
-//MongoDB (Não-relacional)
-
-app.listen(3333);
-
+server.listen(3333);

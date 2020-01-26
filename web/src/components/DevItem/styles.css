@@ -1,18 +1,17 @@
 li.dev-item {
-    background: #FFF;
+    background: #ffffff;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.02);
     border-radius: 2px;
     padding: 20px;
 }
 
-li.dev-item header{
+li.dev-item header {
     display: flex;
-    flex: row;
+    flex-direction: row;
     align-items: center;
-
 }
 
-li.dev-item header img{
+li.dev-item header img {
     width: 54px;
     height: 54px;
     border-radius: 50%;
@@ -36,7 +35,7 @@ li.dev-item header .user-info {
 
 li.dev-item p {
     color: #666;
-    font: 14px;
+    font-size: 14px;
     line-height: 20px;
     margin: 10px 0;
 }
@@ -48,5 +47,5 @@ li.dev-item a {
 }
 
 li.dev-item a:hover {
-    color: #5a2ea6;
+    color: #8e4dd0;
 }

@@ -1,74 +1,56 @@
 const axios = require('axios');
 const Dev = require('../models/Dev');
 const parseStringAsArray = require('../utils/parseStringAsArray');
-
-// index, show, store, update, destroy
+const { findConnections, sendMessage } = require('../websocket');
 
 module.exports = {
-    async index (request, response) {
+    async index(request, response) {
         const devs = await Dev.find();
 
         return response.json(devs);
     },
 
-    async store (request, response) {
+    async store(request, response) {
         const { github_username, techs, latitude, longitude } = request.body;
 
-        let dev = await Dev.findOne( { github_username } );
+        let dev = await Dev.findOne({ github_username });
 
-        if (!dev){
+        if (!dev) {
             const apiResponse = await axios.get(`https://api.github.com/users/${github_username}`);
-    
+
             let { name, avatar_url, bio } = apiResponse.data;
-        
-            if (!name){
+
+            if (!name) {
                 name = apiResponse.data.login;
             }
-        
+
             const techsArray = parseStringAsArray(techs);
-        
+
             const location = {
                 type: 'Point',
                 coordinates: [longitude, latitude],
             };
-        
+
             dev = await Dev.create({
-                github_username,
                 name,
+                github_username,
                 avatar_url,
                 bio,
                 techs: techsArray,
                 location,
-            });
-        
-            console.log(dev);
-        }
-        
-        return response.json(dev);
-    },
+            })
 
-    async update(request, response){
-        const { github_username, name, bio, techs } = request.body;
-        console.log(request.body);
 
-        let dev = await Dev.findOne( { github_username } );
-        console.log(dev);
 
-        let devUpdate = await dev.update({
-            name: request.body.name,
-            bio: request.body.bio,
-            techs: parseStringAsArray(request.body.techs)
-        });
+            const sendSocketMessageTo = findConnections(
+                { latitude, longitude },
+                techsArray,
+            )
 
-        if (!request.body.name)
-        {
-            devUpdate = await dev.update({
-                name: github_username
-            });
+            sendMessage(sendSocketMessageTo, 'new-dev', dev);
+            return response.json(dev);
         }
 
-        //dev = await Dev.findOne( { github_username } );
-
-        return response.json(dev);
+        return response.json({ message: "Usuário com este github username já foi criado!" });
     }
-};
+}
